@@ -27,6 +27,7 @@ class ProfileExtractionService:
         # Prepare messages for LLM
         system_prompt = """You are an AI fitness assistant focused on building hybrid training plans that combine running and strength training. 
 Your job is to extract structured user profile information from natural language inputs to support personalized plan generation.
+Make sure ONLY json is returned, with no additional text or explanations. As it will be parsed by a system,
 
 Extract and return the following fields:
 - training_history (e.g., experience with running, lifting, or hybrid workouts)
@@ -36,7 +37,7 @@ Extract and return the following fields:
 - training_goals (e.g., run a sub-20 5K, build strength, lose fat)
 - health_constraints (e.g., injuries, conditions, recovery needs)
 
-Return a JSON object with these fields, plus a "missing_fields" array listing any fields that are unclear or missing.
+ONLY Return a JSON object with these fields, plus a "missing_fields" array listing any fields that are unclear or missing.
 Use a hybrid training lens—if a user mentions only running or only lifting, consider the other as potentially missing unless clearly ruled out.
 """
 
@@ -47,7 +48,6 @@ Use a hybrid training lens—if a user mentions only running or only lifting, co
                 role = Role.USER if msg.get("role") == "user" else Role.ASSISTANT
                 messages.append(Message(role=role, content=msg.get("content", "")))
         messages.append(Message(role=Role.USER, content=request.user_input))
-        print(f"Messages: {messages}")
         # Get LLM response
         result = await self.llm.generate(messages)
         result = result.strip()
