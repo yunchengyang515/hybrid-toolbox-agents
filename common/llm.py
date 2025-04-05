@@ -40,6 +40,7 @@ class LLMClient:
             
         # Convert internal Message objects to dict format expected by Groq
         groq_messages = [{"role": m.role, "content": m.content} for m in messages]
+        print(groq_messages)
         
         try:
             logger.info(f"Calling Groq with model {self.model}")

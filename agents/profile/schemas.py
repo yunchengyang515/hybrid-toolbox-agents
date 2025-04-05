@@ -19,8 +19,8 @@ class ProfileExtractResponse(BaseModel):
                                   description="Fields that are missing from the fitness profile")
     is_complete: bool = Field(default=False,
                            description="Whether the profile has all required fitness information")
-    follow_up_question: Optional[str] = Field(default=None,
-                                         description="Question to ask to get missing fitness information")
+    follow_up_questions: List[str] = Field(default_factory=list,
+                                     description="Questions to ask to get missing information")
 
 class ProfileValidateRequest(BaseModel):
     """Request to validate a user profile."""
