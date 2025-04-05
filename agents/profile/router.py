@@ -1,5 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status
-from typing import List, Dict, Any
+from fastapi import APIRouter, HTTPException, status
 import logging
 
 from common.llm import LLMClient
@@ -7,8 +6,6 @@ from common.schemas import Message, Role
 from .schemas import (
     ProfileExtractRequest, 
     ProfileExtractResponse,
-    ProfileValidateRequest,
-    ProfileValidateResponse
 )
 
 router = APIRouter()
