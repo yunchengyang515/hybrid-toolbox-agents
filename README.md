@@ -47,3 +47,21 @@ cp .env.example .env
 ```
 
 5. Edit `.env` and add your API keys:
+
+## API Endpoints
+
+### Profile Agent
+
+- **POST /profile**: Extracts and validates user fitness profiles
+
+### Designer Agent
+
+- **POST /designer**: Creates training blocks based on user profiles
+
+### Planning Agent
+
+- **POST /planning**: Organizes training blocks into comprehensive weekly plans
+
+### Feedback Agent
+
+- **POST /feedback**: Analyzes user feedback and suggests plan adjustments
