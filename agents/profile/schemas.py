@@ -6,13 +6,21 @@ class ProfileExtractRequest(BaseModel):
     """Request to extract a user profile from text."""
     user_input: str = Field(..., 
                          description="The raw user input to extract profile information from")
+    conversation_history: Optional[List[Dict[str, str]]] = Field(default=None,
+                                                   description="Previous messages in conversation format [{role: content}]")
 
 class ProfileExtractResponse(BaseModel):
     """Response containing the extracted profile data."""
     profile_data: Dict[str, Any] = Field(..., 
-                                      description="Structured profile data extracted from input")
+                                      description="Structured fitness profile data extracted from input")
     raw_input: str = Field(..., 
                         description="The original user input used for extraction")
+    missing_fields: List[str] = Field(default_factory=list,
+                                  description="Fields that are missing from the fitness profile")
+    is_complete: bool = Field(default=False,
+                           description="Whether the profile has all required fitness information")
+    follow_up_question: Optional[str] = Field(default=None,
+                                         description="Question to ask to get missing fitness information")
 
 class ProfileValidateRequest(BaseModel):
     """Request to validate a user profile."""
