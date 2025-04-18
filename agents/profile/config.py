@@ -42,7 +42,7 @@ Extract and return the following fields:
 - fitness_background (e.g., athletic history, sports played, training style)
 - weekly_schedule (days and times available for training)
 - available_equipment (e.g., kettlebells, barbell, gym access, treadmill)
-- training_goals (e.g., run a sub-20 5K, build strength, lose fat)
+- training_goals (e.g., run a sub-20 5K, build strength, Hyrox event)
 - health_constraints (e.g., injuries, conditions, recovery needs)
 
 ONLY Return a JSON object with these fields, plus a "missing_fields" array listing any fields that are unclear or missing.
