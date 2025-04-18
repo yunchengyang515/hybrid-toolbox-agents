@@ -5,7 +5,7 @@ import logging
 
 from common.config import settings
 from common.dependencies import verify_api_key
-from agents.profile.router import router as profile_router
+from agents.planning.router import router as planning_router
 
 
 # Configure logging
@@ -50,8 +50,8 @@ api_v1 = FastAPI(
     dependencies=[Depends(verify_api_key)]
 )
 
-# Register all agent routers
-api_v1.include_router(profile_router, prefix="/profile", tags=["Profile Agent"])
+# Register the planning agent router with simplified MVP endpoints
+api_v1.include_router(planning_router, prefix="/planning", tags=["Planning Agent"])
 
 # Mount the v1 API under /v1 prefix
 app.mount("/v1", api_v1)

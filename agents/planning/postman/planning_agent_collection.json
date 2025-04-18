@@ -1,0 +1,905 @@
+{
+  "info": {
+    "name": "Hybrid Training Planning API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "0",
+    "description": "Collection for testing the Hybrid Training Planning API endpoints",
+    "version": "1.0.0"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8000",
+      "type": "string"
+    },
+    {
+      "key": "apiKey",
+      "value": "your_api_key_here",
+      "type": "string"
+    },
+    {
+      "key": "apiVersion",
+      "value": "v1",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/health",
+          "host": ["{{baseUrl}}"],
+          "path": ["health"]
+        },
+        "description": "Check if the server is running properly"
+      }
+    },
+    {
+      "name": "MVP Flow",
+      "item": [
+        {
+          "name": "Initial Request (Incomplete Profile)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-API-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user_input\": \"I'm a runner looking to add strength training. I run about 25 miles per week and have completed a few half marathons. I want to improve my running economy and prevent injuries.\",\n  \"plan_parameters\": {\n    \"duration_weeks\": 4,\n    \"emphasis\": \"balanced\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/{{apiVersion}}/planning/generate-plan-mvp",
+              "host": ["{{baseUrl}}"],
+              "path": ["{{apiVersion}}", "planning", "generate-plan-mvp"]
+            },
+            "description": "Initial request with incomplete profile information"
+          }
+        },
+        {
+          "name": "Follow-up Request (Adding Missing Info)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-API-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user_input\": \"I have a gym membership and can access all standard equipment. I can train Monday, Wednesday, Friday evenings and weekends. I played soccer in college and occasionally have knee pain after long runs.\",\n  \"conversation_history\": [\n    {\n      \"role\": \"user\",\n      \"content\": \"I'm a runner looking to add strength training. I run about 25 miles per week and have completed a few half marathons. I want to improve my running economy and prevent injuries.\"\n    },\n    {\n      \"role\": \"assistant\",\n      \"content\": \"Can you tell me about what equipment you have access to, your weekly schedule for training, and any health constraints or previous injuries I should know about?\"\n    }\n  ],\n  \"plan_parameters\": {\n    \"duration_weeks\": 4,\n    \"emphasis\": \"balanced\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/{{apiVersion}}/planning/generate-plan-mvp",
+              "host": ["{{baseUrl}}"],
+              "path": ["{{apiVersion}}", "planning", "generate-plan-mvp"]
+            },
+            "description": "Follow-up request with conversation history that completes the profile"
+          }
+        },
+        {
+          "name": "Complete Profile Request",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-API-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user_input\": \"I'm looking to start a hybrid training program. My background is mostly bodybuilding with 5 years of experience, but I've recently started running 10K distances. My goal is to maintain my muscle mass while improving my 10K time. I have access to a full gym and can train 4 days per week - Monday, Tuesday, Thursday, and Saturday. I have no major health issues but sometimes experience knee pain after long runs.\",\n  \"plan_parameters\": {\n    \"duration_weeks\": 4,\n    \"emphasis\": \"balanced\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/{{apiVersion}}/planning/generate-plan-mvp",
+              "host": ["{{baseUrl}}"],
+              "path": ["{{apiVersion}}", "planning", "generate-plan-mvp"]
+            },
+            "description": "Complete profile information provided in a single request"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Individual Endpoints",
+      "item": [
+        {
+          "name": "Extract Profile",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-API-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user_input\": \"I'm a runner looking to add strength training. I typically run about 25 miles per week and have completed a few half marathons.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/{{apiVersion}}/planning/extract-profile",
+              "host": ["{{baseUrl}}"],
+              "path": ["{{apiVersion}}", "planning", "extract-profile"]
+            },
+            "description": "Extract profile information from user input"
+          }
+        },
+        {
+          "name": "Generate Plan",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-API-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"profile\": {\n    \"training_history\": \"Running 25 miles per week, completed several half marathons\",\n    \"fitness_background\": \"Former soccer player in college, consistent runner for 3 years\",\n    \"weekly_schedule\": \"Available Monday, Wednesday, Friday evenings and weekends\",\n    \"available_equipment\": \"Full gym access and home dumbbells\",\n    \"training_goals\": \"Improve running economy and build strength for injury prevention\",\n    \"health_constraints\": \"Occasional knee pain after long runs\"\n  },\n  \"plan_parameters\": {\n    \"duration_weeks\": 4,\n    \"emphasis\": \"balanced\",\n    \"include_warmups\": true,\n    \"include_cooldowns\": true\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/{{apiVersion}}/planning/generate-plan",
+              "host": ["{{baseUrl}}"],
+              "path": ["{{apiVersion}}", "planning", "generate-plan"]
+            },
+            "description": "Generate a training plan from a complete profile"
+          }
+        },
+        {
+          "name": "Example API Flow",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "X-API-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/{{apiVersion}}/planning/example",
+              "host": ["{{baseUrl}}"],
+              "path": ["{{apiVersion}}", "planning", "example"]
+            },
+            "description": "Get example of API usage"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Test Cases by Goal",
+      "item": [
+        {
+          "name": "Weight Loss Focus",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-API-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user_input\": \"I need to lose about 30 pounds and improve my overall fitness. I was active in high school playing basketball but that was 10 years ago. Since then, I've been mostly sedentary except for occasional walks. I don't have a gym membership yet but I'm willing to get one. At home I just have a yoga mat and resistance bands. I can work out after work on weekdays (around 6pm) and anytime on weekends. I'd like to start with 3-4 days per week. No major health issues but I get winded easily.\",\n  \"plan_parameters\": {\n    \"duration_weeks\": 4,\n    \"emphasis\": \"balanced\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/{{apiVersion}}/planning/generate-plan-mvp",
+              "host": ["{{baseUrl}}"],
+              "path": ["{{apiVersion}}", "planning", "generate-plan-mvp"]
+            },
+            "description": "Complete profile with weight loss as primary goal"
+          }
+        },
+        {
+          "name": "Triathlon Training",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-API-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user_input\": \"I'm training for a triathlon in 6 months. Currently swimming 2x a week, biking 3x a week, and running 3x a week. I was a competitive swimmer in college. I've completed two Olympic distance triathlons before but this will be my first half-Ironman distance. I'm strong in swimming, decent in cycling, but running is my weakness. I train every day with Monday as a recovery day. I have access to a full gym, a pool, my road bike, and all the standard triathlon gear. I typically train early mornings on weekdays and do longer sessions on weekends.\",\n  \"plan_parameters\": {\n    \"duration_weeks\": 6,\n    \"emphasis\": \"running\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/{{apiVersion}}/planning/generate-plan-mvp",
+              "host": ["{{baseUrl}}"],
+              "path": ["{{apiVersion}}", "planning", "generate-plan-mvp"]
+            },
+            "description": "Experienced athlete preparing for a triathlon"
+          }
+        },
+        {
+          "name": "Health Constraints",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-API-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user_input\": \"I want to get fit but I have lower back pain and asthma. I'd like to strengthen my core to help with my back pain, improve my cardiovascular health, and maybe lose a bit of weight. I've tried yoga and swimming in the past. Swimming seemed to work well with my asthma. I've never really done any strength training before. I have access to a pool and basic home equipment. I can train Tuesday, Thursday evenings and weekend mornings.\",\n  \"plan_parameters\": {\n    \"duration_weeks\": 4,\n    \"emphasis\": \"strength\",\n    \"include_warmups\": true\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/{{apiVersion}}/planning/generate-plan-mvp",
+              "host": ["{{baseUrl}}"],
+              "path": ["{{apiVersion}}", "planning", "generate-plan-mvp"]
+            },
+            "description": "User with health constraints requiring modified approach"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Parameter Variations",
+      "item": [
+        {
+          "name": "Running Emphasis",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-API-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"profile\": {\n    \"training_history\": \"Casual runner for 2 years, about 15 miles per week\",\n    \"fitness_background\": \"Played soccer in high school\",\n    \"weekly_schedule\": \"Available every day except Wednesday\",\n    \"available_equipment\": \"Basic home gym with dumbbells and resistance bands\",\n    \"training_goals\": \"Train for first half marathon\",\n    \"health_constraints\": \"None\"\n  },\n  \"plan_parameters\": {\n    \"duration_weeks\": 8,\n    \"emphasis\": \"running\",\n    \"include_warmups\": true,\n    \"include_cooldowns\": true\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/{{apiVersion}}/planning/generate-plan",
+              "host": ["{{baseUrl}}"],
+              "path": ["{{apiVersion}}", "planning", "generate-plan"]
+            },
+            "description": "Plan with running emphasis"
+          }
+        },
+        {
+          "name": "Strength Emphasis",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-API-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"profile\": {\n    \"training_history\": \"Casual runner for 2 years, about 15 miles per week\",\n    \"fitness_background\": \"Played soccer in high school\",\n    \"weekly_schedule\": \"Available every day except Wednesday\",\n    \"available_equipment\": \"Full gym membership\",\n    \"training_goals\": \"Build muscle while maintaining running fitness\",\n    \"health_constraints\": \"None\"\n  },\n  \"plan_parameters\": {\n    \"duration_weeks\": 6,\n    \"emphasis\": \"strength\",\n    \"include_warmups\": true,\n    \"include_cooldowns\": true\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/{{apiVersion}}/planning/generate-plan",
+              "host": ["{{baseUrl}}"],
+              "path": ["{{apiVersion}}", "planning", "generate-plan"]
+            },
+            "description": "Plan with strength emphasis"
+          }
+        },
+        {
+          "name": "Short Duration",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-API-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"profile\": {\n    \"training_history\": \"Casual runner for 2 years, about 15 miles per week\",\n    \"fitness_background\": \"Played soccer in high school\",\n    \"weekly_schedule\": \"Available every day except Wednesday\",\n    \"available_equipment\": \"Full gym membership\",\n    \"training_goals\": \"Get ready for a 5K race in two weeks\",\n    \"health_constraints\": \"None\"\n  },\n  \"plan_parameters\": {\n    \"duration_weeks\": 2,\n    \"emphasis\": \"balanced\",\n    \"include_warmups\": true,\n    \"include_cooldowns\": false\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/{{apiVersion}}/planning/generate-plan",
+              "host": ["{{baseUrl}}"],
+              "path": ["{{apiVersion}}", "planning", "generate-plan"]
+            },
+            "description": "Short duration plan (2 weeks)"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Profile Field Extraction Tests",
+      "item": [
+        {
+          "name": "Training History Field Test",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-API-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user_input\": \"I've been running consistently for the past 3 years, averaging about 30 miles per week. My typical weekly schedule includes 4-5 runs with one long run on weekends. I've completed two marathons with a best time of 3:45 and several half marathons.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/{{apiVersion}}/planning/extract-profile",
+              "host": ["{{baseUrl}}"],
+              "path": ["{{apiVersion}}", "planning", "extract-profile"]
+            },
+            "description": "Tests extraction of detailed training history information"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Training history field is correctly extracted\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.profile_data).to.have.property('training_history');",
+                  "    pm.expect(jsonData.profile_data.training_history).to.include('30 miles');",
+                  "    pm.expect(jsonData.profile_data.training_history).to.include('marathons');",
+                  "});",
+                  ""
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Fitness Background Field Test",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-API-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user_input\": \"I was a college athlete playing basketball for 4 years. After graduation, I took up CrossFit for a couple of years before focusing primarily on running. I've always been naturally athletic and have good coordination.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/{{apiVersion}}/planning/extract-profile",
+              "host": ["{{baseUrl}}"],
+              "path": ["{{apiVersion}}", "planning", "extract-profile"]
+            },
+            "description": "Tests extraction of fitness background information"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Fitness background field is correctly extracted\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.profile_data).to.have.property('fitness_background');",
+                  "    pm.expect(jsonData.profile_data.fitness_background).to.include('basketball');",
+                  "    pm.expect(jsonData.profile_data.fitness_background).to.include('CrossFit');",
+                  "});",
+                  ""
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Weekly Schedule Field Test",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-API-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user_input\": \"I can train Monday, Wednesday, and Friday mornings before work (6-7:30 AM), and I have more flexibility on weekends for longer sessions. Tuesdays and Thursdays are typically busy with family commitments.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/{{apiVersion}}/planning/extract-profile",
+              "host": ["{{baseUrl}}"],
+              "path": ["{{apiVersion}}", "planning", "extract-profile"]
+            },
+            "description": "Tests extraction of weekly schedule information"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Weekly schedule field is correctly extracted\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.profile_data).to.have.property('weekly_schedule');",
+                  "    pm.expect(jsonData.profile_data.weekly_schedule).to.include('Monday');",
+                  "    pm.expect(jsonData.profile_data.weekly_schedule).to.include('Wednesday');",
+                  "    pm.expect(jsonData.profile_data.weekly_schedule).to.include('Friday');",
+                  "});",
+                  ""
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Available Equipment Field Test",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-API-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user_input\": \"I have a full gym membership at a facility with squat racks, benches, free weights, and cardio equipment. At home, I have a set of adjustable dumbbells up to 50lbs, resistance bands, a kettlebell, and a pull-up bar.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/{{apiVersion}}/planning/extract-profile",
+              "host": ["{{baseUrl}}"],
+              "path": ["{{apiVersion}}", "planning", "extract-profile"]
+            },
+            "description": "Tests extraction of available equipment information"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Available equipment field is correctly extracted\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.profile_data).to.have.property('available_equipment');",
+                  "    pm.expect(jsonData.profile_data.available_equipment).to.include('gym membership');",
+                  "    pm.expect(jsonData.profile_data.available_equipment).to.include('dumbbells');",
+                  "});",
+                  ""
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Training Goals Field Test",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-API-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user_input\": \"I'm training for a half marathon in 3 months and want to improve my time from 2:10 to under 2 hours. I also want to build more upper body strength since I've been mostly focused on legs from running. Injury prevention is important to me as well.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/{{apiVersion}}/planning/extract-profile",
+              "host": ["{{baseUrl}}"],
+              "path": ["{{apiVersion}}", "planning", "extract-profile"]
+            },
+            "description": "Tests extraction of training goals information"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Training goals field is correctly extracted\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.profile_data).to.have.property('training_goals');",
+                  "    pm.expect(jsonData.profile_data.training_goals).to.include('half marathon');",
+                  "    pm.expect(jsonData.profile_data.training_goals).to.include('upper body strength');",
+                  "});",
+                  ""
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Health Constraints Field Test",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-API-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user_input\": \"I have mild lower back pain that flares up occasionally with heavy lifting. I also had a minor knee injury last year that's mostly healed, but I still need to be careful with high-impact activities. I sometimes get shin splints if I increase my mileage too quickly.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/{{apiVersion}}/planning/extract-profile",
+              "host": ["{{baseUrl}}"],
+              "path": ["{{apiVersion}}", "planning", "extract-profile"]
+            },
+            "description": "Tests extraction of health constraints information"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Health constraints field is correctly extracted\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.profile_data).to.have.property('health_constraints');",
+                  "    pm.expect(jsonData.profile_data.health_constraints).to.include('back pain');",
+                  "    pm.expect(jsonData.profile_data.health_constraints).to.include('knee');",
+                  "});",
+                  ""
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "All Fields Combined Test",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-API-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user_input\": \"I've been running for 2 years (about 20 miles weekly) and doing basic strength training. I played soccer in college. I can train on Monday, Wednesday, Friday mornings and weekends. I have a gym membership and some home equipment including dumbbells and resistance bands. My goal is to run a half marathon in under 2 hours while building more muscle. I have occasional knee pain after long runs.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/{{apiVersion}}/planning/extract-profile",
+              "host": ["{{baseUrl}}"],
+              "path": ["{{apiVersion}}", "planning", "extract-profile"]
+            },
+            "description": "Tests extraction of all profile fields at once"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"All profile fields are correctly extracted\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    // Check presence of all fields",
+                  "    pm.expect(jsonData.profile_data).to.have.property('training_history');",
+                  "    pm.expect(jsonData.profile_data).to.have.property('fitness_background');",
+                  "    pm.expect(jsonData.profile_data).to.have.property('weekly_schedule');",
+                  "    pm.expect(jsonData.profile_data).to.have.property('available_equipment');",
+                  "    pm.expect(jsonData.profile_data).to.have.property('training_goals');",
+                  "    pm.expect(jsonData.profile_data).to.have.property('health_constraints');",
+                  "    ",
+                  "    // Verify profile is complete",
+                  "    pm.expect(jsonData.is_complete).to.be.true;",
+                  "    pm.expect(jsonData.missing_fields).to.be.empty;",
+                  "});",
+                  ""
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Memory Test - Add Missing Fields",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Profile has missing fields\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.is_complete).to.be.false;",
+                  "    pm.expect(jsonData.missing_fields.length).to.be.greaterThan(0);",
+                  "    ",
+                  "    // Store follow-up question for next test",
+                  "    if(jsonData.follow_up_questions && jsonData.follow_up_questions.length > 0) {",
+                  "        pm.environment.set(\"follow_up_question\", jsonData.follow_up_questions[0]);",
+                  "        pm.environment.set(\"initial_input\", jsonData.raw_input);",
+                  "    }",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-API-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user_input\": \"I'm a runner looking to build some strength. I run about 15 miles per week.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/{{apiVersion}}/planning/extract-profile",
+              "host": ["{{baseUrl}}"],
+              "path": ["{{apiVersion}}", "planning", "extract-profile"]
+            },
+            "description": "Tests initial extraction with incomplete information"
+          }
+        },
+        {
+          "name": "Memory Test - Follow Up",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Memory retains previous information\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.profile_data.training_history).to.include('15 miles');",
+                  "    pm.expect(jsonData.profile_data.training_goals).to.include('stronger');",
+                  "});",
+                  ""
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-API-Key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user_input\": \"I want to get stronger while still improving my running endurance\",\n  \"conversation_history\": [\n    {\n      \"role\": \"user\",\n      \"content\": \"{{initial_input}}\"\n    },\n    {\n      \"role\": \"assistant\",\n      \"content\": \"{{follow_up_question}}\"\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/{{apiVersion}}/planning/extract-profile",
+              "host": ["{{baseUrl}}"],
+              "path": ["{{apiVersion}}", "planning", "extract-profile"]
+            },
+            "description": "Tests follow-up extraction with conversation history"
+          }
+        }
+      ]
+    }
+  ]
+}

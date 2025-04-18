@@ -4,12 +4,12 @@ Multi-endpoint agent system for hybrid training plan generation, built with Fast
 
 ## Overview
 
-This API provides multiple specialized agents for creating comprehensive hybrid training plans:
+This API provides a comprehensive planning agent for creating hybrid training plans that combine running and strength training:
 
-- **Profile Agent**: Extracts and validates user fitness profiles
-- **Designer Agent**: Creates training blocks based on user profiles
-- **Planning Agent**: Organizes training blocks into comprehensive weekly plans
-- **Feedback Agent**: Analyzes user feedback and suggests plan adjustments
+- **Planning Agent**: Extracts user profiles, designs training blocks, and organizes them into comprehensive weekly plans
+  - Profile Extraction: Collects and structures user fitness information
+  - Training Design: Creates appropriate training blocks based on user profiles
+  - Plan Organization: Schedules training blocks into a cohesive weekly plan
 
 ## Setup Instructions
 
@@ -31,7 +31,7 @@ cd hybrid-toolbox-agents
 
 ```bash
 python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+source .venv/bin/activate  # On Windows: venv\Scripts\activate
 ```
 
 3. Install dependencies:
@@ -46,22 +46,49 @@ pip install -r requirements.txt
 cp .env.example .env
 ```
 
-5. Edit `.env` and add your API keys:
+5. Edit `.env` and add your API keys
+
+## Local Development
+
+### Starting the FastAPI Server
+
+To run the API server locally:
+
+```bash
+# Option 1: Using the main.py directly with auto-reload
+python main.py
+
+# Option 2: Using uvicorn directly
+uvicorn main:app --reload --host 0.0.0.0 --port 8000
+```
+
+The API will be available at: http://localhost:8000
+
+### API Documentation
+
+FastAPI automatically generates interactive documentation:
+
+- Swagger UI: http://localhost:8000/docs
+- ReDoc: http://localhost:8000/redoc
+
+### Health Check
+
+Verify the server is running correctly:
+
+```bash
+curl http://localhost:8000/health
+```
+
+### Development Tools
+
+- **Testing API Endpoints**: Use the Postman collection in `agents/planning/postman/` for testing endpoints
+- **Code Formatting**: Run `black .` to format Python code
+- **Linting**: Run `flake8 .` to check for code quality issues
 
 ## API Endpoints
 
-### Profile Agent
-
-- **POST /profile**: Extracts and validates user fitness profiles
-
-### Designer Agent
-
-- **POST /designer**: Creates training blocks based on user profiles
-
 ### Planning Agent
 
-- **POST /planning**: Organizes training blocks into comprehensive weekly plans
-
-### Feedback Agent
-
-- **POST /feedback**: Analyzes user feedback and suggests plan adjustments
+- **POST /v1/planning/extract-profile**: Extracts user profile information from conversation
+- **POST /v1/planning/generate-plan**: Generates a complete training plan based on user profile
+- **POST /v1/planning/adjust-plan**: Adjusts an existing plan based on user feedback
