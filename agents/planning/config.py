@@ -83,11 +83,6 @@ The TrainingPlan schema includes:
 - notes: string - Overall plan notes (optional)
 """
 
-        self.recommendations_system_prompt = """You are an expert hybrid training coach providing targeted recommendations.
-Based on user profiles and training plans, give specific, actionable recommendations.
-Focus on practical advice that will help users succeed with their hybrid training program.
-Keep recommendations concise, clear, and directly relevant to the user's specific situation.
-"""
 
 
 

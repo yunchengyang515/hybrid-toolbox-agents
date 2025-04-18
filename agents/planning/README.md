@@ -18,13 +18,6 @@ The Planning Agent is an all-in-one solution for creating personalized hybrid tr
    - Creates complete training plans based on user profiles
    - Balances running and strength training components
    - Customizes plans according to specified parameters (duration, emphasis, etc.)
-   - Provides supplementary recommendations
-
-3. **Plan Adjustment**
-   - Modifies existing plans based on user feedback
-   - Preserves the plan's core structure while addressing specific concerns
-   - Summarizes the changes made and their rationale
-   - Offers additional recommendations for optimal results
 
 ## API Endpoints
 

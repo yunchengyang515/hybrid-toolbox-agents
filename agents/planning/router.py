@@ -54,7 +54,7 @@ async def generate_comprehensive_plan(request: ComprehensivePlanRequest):
         )
         
         plan_response = await planning_service.generate_plan(plan_request)
-        logger.info(f"Plan generated: {plan_response.plan.title}")
+        logger.info(f"Plan guidelines generated for {request.plan_parameters.duration_weeks}-week plan")
         
         return ComprehensivePlanResponse(
             status="complete",
@@ -62,7 +62,8 @@ async def generate_comprehensive_plan(request: ComprehensivePlanRequest):
             missing_fields=[],
             follow_up_questions=[],
             plan=plan_response.plan,
-            recommendations=plan_response.recommendations
+            recommendations=plan_response.recommendations,
+            guidelines=plan_response.guidelines
         )
         
     except Exception as e:

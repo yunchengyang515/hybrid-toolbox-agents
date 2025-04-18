@@ -28,8 +28,6 @@ class PlanParameters(BaseModel):
     """Parameters for plan generation."""
     duration_weeks: int = Field(default=4, description="Duration of plan in weeks")
     emphasis: str = Field(default="balanced", description="Training emphasis (e.g., running, strength, balanced)")
-    include_warmups: bool = Field(default=True, description="Whether to include detailed warmup routines")
-    include_cooldowns: bool = Field(default=True, description="Whether to include cooldown routines")
 
 class GeneratePlanRequest(BaseModel):
     """Request to generate a training plan."""
@@ -43,6 +41,8 @@ class GeneratePlanResponse(BaseModel):
     profile_summary: Dict[str, Any] = Field(..., description="Summary of the profile used")
     recommendations: List[str] = Field(default_factory=list, 
                                   description="Additional recommendations based on the plan")
+    guidelines: Optional[str] = Field(default=None, 
+                                 description="Conversational guidelines for the training plan")
 
 # Comprehensive MVP endpoint schemas that combines profile extraction and plan generation
 class ComprehensivePlanRequest(BaseModel):
@@ -68,3 +68,5 @@ class ComprehensivePlanResponse(BaseModel):
                                     description="The generated training plan (if profile is complete)")
     recommendations: List[str] = Field(default_factory=list,
                                   description="Additional recommendations based on the plan")
+    guidelines: Optional[str] = Field(default=None, 
+                                 description="Conversational plan guidelines (if profile is complete)")
