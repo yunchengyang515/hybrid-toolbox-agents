@@ -43,6 +43,10 @@ class GeneratePlanResponse(BaseModel):
                                   description="Additional recommendations based on the plan")
     guidelines: Optional[str] = Field(default=None, 
                                  description="Conversational guidelines for the training plan")
+    table_format: Optional[str] = Field(default=None,
+                                   description="Plan formatted as a tab-delimited table")
+    csv_format: Optional[str] = Field(default=None,
+                               description="Plan formatted as CSV")
 
 # Comprehensive MVP endpoint schemas that combines profile extraction and plan generation
 class ComprehensivePlanRequest(BaseModel):

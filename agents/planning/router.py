@@ -1,10 +1,8 @@
-import json
 from fastapi import APIRouter, HTTPException, status
 import logging
 from typing import Dict, Any
 
-from common.llm import LLMClient
-from common.schemas import Message, Role, TrainingPlan
+
 from .schemas import (
     ProfileExtractRequest, 
     ProfileExtractResponse,
@@ -13,7 +11,7 @@ from .schemas import (
     ComprehensivePlanRequest,
     ComprehensivePlanResponse
 )
-from .services import PlanningService
+from .planning_service import PlanningService
 
 router = APIRouter()
 logger = logging.getLogger(__name__)

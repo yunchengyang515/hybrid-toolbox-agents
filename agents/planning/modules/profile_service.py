@@ -4,17 +4,17 @@ from typing import List, Dict, Any, Optional
 
 from common.llm import LLMClient
 from common.schemas import Message, Role
-from .schemas import ProfileExtractRequest, ProfileExtractResponse
-from .config import ProfileConfig
+from ..schemas import ProfileExtractRequest, ProfileExtractResponse
+from ..config import PlanningConfig
 
 logger = logging.getLogger(__name__)
 
 class ProfileExtractionService:
-    """Service for extracting user profile information for hybrid training."""
+    """Service for extracting user profile information from natural language inputs."""
 
-    def __init__(self):
-        self.config = ProfileConfig()
-        self.llm = LLMClient()
+    def __init__(self, config: Optional[PlanningConfig] = None, llm: Optional[LLMClient] = None):
+        self.config = config or PlanningConfig()
+        self.llm = llm or LLMClient()
 
     async def extract_profile(self, request: ProfileExtractRequest) -> ProfileExtractResponse:
         """Extract profile data from user input and handle missing information."""
@@ -47,7 +47,7 @@ class ProfileExtractionService:
         
     async def _extract_profile_data(self, request: ProfileExtractRequest) -> Dict[str, Any]:
         """Extract profile data using LLM."""
-        messages = self._build_messages(request)
+        messages = self._build_profile_messages(request)
         result = await self.llm.generate(messages)
         result = result.strip()
 
@@ -64,9 +64,9 @@ class ProfileExtractionService:
             
         return parsed_result
     
-    def _build_messages(self, request: ProfileExtractRequest) -> List[Message]:
-        """Build messages for LLM based on request and system prompt."""
-        messages = [Message(role=Role.SYSTEM, content=self.config.system_prompt)]
+    def _build_profile_messages(self, request: ProfileExtractRequest) -> List[Message]:
+        """Build messages for LLM based on request and system prompt for profile extraction."""
+        messages = [Message(role=Role.SYSTEM, content=self.config.profile_system_prompt)]
         
         if request.conversation_history:
             for msg in request.conversation_history:
@@ -86,7 +86,6 @@ class ProfileExtractionService:
 
     def _prioritize_missing_fields(self, missing_fields: List[str]) -> List[str]:
         """Prioritize missing fields based on importance for hybrid training."""
-        # Sort missing fields by priority
         return sorted(missing_fields, key=lambda field: 
                      self.config.priority_order.index(field) 
                      if field in self.config.priority_order 
@@ -110,31 +109,20 @@ class ProfileExtractionService:
         ]
         question = await self.llm.generate(messages)
         return question.strip().strip('"')
-
+        
+    # Helper method for conversation history
     def build_next_conversation_history(
         self, 
         current_history: Optional[List[Dict[str, str]]], 
         response: ProfileExtractResponse,
         follow_up_question: str
     ) -> List[Dict[str, str]]:
-        """
-        Helper method to build the conversation history for the next request.
-        
-        Args:
-            current_history: The current conversation history
-            response: The current response object
-            follow_up_question: The follow-up question that was asked
-            
-        Returns:
-            Updated conversation history for the next request
-        """
+        """Build conversation history for the next request."""
         # Initialize conversation history if None
         history = current_history or []
-        
         # Add the original user message to history if not already there
         if not history or history[-1]["role"] != "user" or history[-1]["content"] != response.raw_input:
             history.append({"role": "user", "content": response.raw_input})
-        
         # Add the system's follow-up question to history
         history.append({"role": "assistant", "content": follow_up_question})
         
