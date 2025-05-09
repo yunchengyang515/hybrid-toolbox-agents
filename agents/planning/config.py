@@ -9,26 +9,36 @@ class PlanningConfig:
             "weekly_schedule", 
             "available_equipment",
             "training_goals",
-            "health_constraints"
+            "health_constraints",
+            "event_targets",
+            "movement_limitations",
+            "preferred_training_style"
         ]
-        
+
         self.priority_order = [
             "training_goals",
             "training_history", 
             "weekly_schedule",
             "available_equipment",
             "fitness_background",
+            "event_targets",
+            "movement_limitations",
+            "preferred_training_style",
             "health_constraints"
         ]
-        
+
         self.field_descriptions = {
-            "training_history": "past workout experience (e.g., running, lifting, or hybrid)",
-            "fitness_background": "athletic background or sports history",
-            "weekly_schedule": "availability for training during the week",
-            "available_equipment": "equipment available for workouts (e.g., kettlebells, gym access)",
-            "training_goals": "specific goals like building strength or improving running performance",
-            "health_constraints": "any injuries, medical conditions, or recovery concerns"
+            "training_history": "past workout experience (e.g., running, lifting, hybrid sessions, CrossFit)",
+            "fitness_background": "athletic background or sports history (e.g., former athlete, sedentary, gym-goer)",
+            "weekly_schedule": "availability for training during the week (days, time windows)",
+            "available_equipment": "equipment user can train with (e.g., barbell, kettlebells, sled, rower, treadmill)",
+            "training_goals": "specific goals (e.g., build strength, run sub-20 5K, complete Hyrox)",
+            "health_constraints": "injuries or medical limitations (e.g., recent surgery, joint pain)",
+            "event_targets": "specific competition or event user is preparing for (e.g., Hyrox race, Spartan, 5K)",
+            "movement_limitations": "non-medical limitations to movement (e.g., can’t squat below parallel, overhead pain)",
+            "preferred_training_style": "if known, describe preferred training format (e.g., circuits, intervals, long runs)"
         }
+
         
         # System prompts for different functions
         
@@ -54,6 +64,18 @@ IMPORTANT:
 - If the answers are vague or unclear, use the following guidelines:
 - You can state that "user provided an unclear answer, we will use a generic setting" 
 - Include the field in missing_fields array if information is not provided
+
+CLARIFYING THE DIFFERENCE:
+- `training_goals` = Desired capacities (e.g., "run sub-20 5K", "build strength", "improve engine", "maintain muscle while running more")
+- `event_targets` = Specific event or race (e.g., "Hyrox Munich on July 6", "Spartan Super race", "5K Turkey Trot in November")
+
+⚠️ SPECIAL NOTES ON HYBRID TRAINING:
+- If user only mentions running goals, but has a background in lifting (or vice versa), still include BOTH under `training_goals` if implied. Example:
+  > “I want to run a sub-20 5K” + “I lift 4x/week” → training_goals should include “run a sub-20 5K” AND “maintain strength”
+- If user mentions Hyrox, assume goal includes **race readiness across all 8 functional stations + running**.
+- If user says “I want to run a 5K at Hyrox”, correct that in your interpretation—there’s no 5K race at Hyrox.
+- Use domain knowledge to separate aerobic vs strength demands, and preserve hybrid intent.
+
 
 ONLY Return a JSON object with these fields, plus a "missing_fields" array listing any fields that are unclear or missing.
 Use a hybrid training lens—if a user mentions only running or only lifting, consider the other as potentially missing unless clearly ruled out.
