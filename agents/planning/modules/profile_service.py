@@ -56,14 +56,48 @@ class ProfileExtractionService:
         try:
             parsed_result = json.loads(result)
         except json.JSONDecodeError:
-            logger.error("Invalid JSON response from LLM")
-            parsed_result = {}
+            logger.warning(f"Invalid JSON response from LLM. Attempting to repair...")
+            
+            # Try to repair the JSON
+            try:
+                repaired_json = await self._repair_json(result)
+                if repaired_json:
+                    parsed_result = repaired_json
+                else:
+                    logger.error("Could not repair JSON - repair failed")
+                    parsed_result = {}
+            except Exception as e:
+                logger.error(f"Error during JSON repair: {str(e)}")
+                parsed_result = {}
             
         # Remove missing_fields from the result if present
         if isinstance(parsed_result, dict) and "missing_fields" in parsed_result:
             parsed_result.pop("missing_fields", None)
             
         return parsed_result
+    
+    async def _repair_json(self, malformed_json: str) -> Optional[Dict[str, Any]]:
+        """Attempt to repair malformed JSON by asking the LLM to fix it."""
+        try:
+            # Prepare prompt for JSON repair
+            repair_prompt = self.config.json_repair_prompt.format(json_content=malformed_json)
+            
+            # Send the repair request to the LLM
+            messages = [Message(role=Role.USER, content=repair_prompt)]
+            repaired_text = await self.llm.generate(messages)
+            repaired_text = repaired_text.strip()
+            
+            # Try to parse the repaired JSON
+            repaired_json = json.loads(repaired_text)
+            logger.info("Successfully repaired JSON")
+            return repaired_json
+        
+        except json.JSONDecodeError:
+            logger.error("JSON repair attempt failed - still invalid JSON")
+            return None
+        except Exception as e:
+            logger.error(f"Error during JSON repair attempt: {str(e)}")
+            return None
     
     def _build_profile_messages(self, request: ProfileExtractRequest) -> List[Message]:
         """Build messages for LLM based on request and system prompt for profile extraction."""
@@ -81,7 +115,26 @@ class ProfileExtractionService:
         """Determine which required fields are missing from the profile data."""
         missing_fields = []
         for field in self.config.required_fields:
-            if field not in profile_data or not profile_data.get(field):
+            # Check if field is missing, empty, or contains placeholder text
+            value = profile_data.get(field)
+            
+            if (
+                field not in profile_data or 
+                not value or 
+                value == "" or 
+                value == "null" or
+                value is None or
+                isinstance(value, str) and any(placeholder in value.lower() for placeholder in [
+                    "no mention", 
+                    "not specified", 
+                    "not mentioned", 
+                    "not provided", 
+                    "unknown", 
+                    "unclear",
+                    "not stated",
+                    "not indicated"
+                ])
+            ):
                 missing_fields.append(field)
         return missing_fields
 

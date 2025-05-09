@@ -115,6 +115,17 @@ The TrainingPlan schema includes:
 - notes: string - Overall plan notes (optional)
 """
 
+        # JSON repair prompt
+        self.json_repair_prompt = """You are a JSON formatting expert. 
+The following text was intended to be valid JSON, but it has syntax errors. 
+Fix the JSON syntax errors and return ONLY the corrected JSON with no additional text or explanations.
+
+Here's the malformed JSON:
+{json_content}
+
+Return ONLY the fixed JSON with no additional text. The result must be valid JSON that can be parsed by json.loads().
+"""
+
 
 
 
