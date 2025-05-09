@@ -26,6 +26,7 @@ class ProfileExtractionService:
         
         # Check if profile is complete
         is_complete = len(missing_fields) == 0
+        print(f"missing fields: {missing_fields}")
 
         # Generate follow-up questions if needed
         follow_up_questions = []

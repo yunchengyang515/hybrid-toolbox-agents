@@ -43,7 +43,17 @@ Extract and return the following fields:
 - weekly_schedule (days and times available for training)
 - available_equipment (e.g., kettlebells, barbell, gym access, treadmill)
 - training_goals (e.g., run a sub-20 5K, build strength, Hyrox event)
-- health_constraints (e.g., injuries, conditions, recovery needs)
+- health_constraints (e.g., injuries, conditions, recovery needs) - for this field, if user stated they don't have any health constraints, set it as "user stated they don't have any health constraints"
+
+
+
+IMPORTANT:
+- If information for a field is not included in user message or answers, set it to an empty string "" or null - DO NOT add text like "no mention" or "not specified"
+- Only include information that is explicitly mentioned in the user input
+- If user stated they don't have goal, history, equipment, or heath constraints / injuries, then you can format user's answer like "user stated they don't have any goal"/"user stated they don't have any history"/"user stated they don't have any equipment"/"user stated they don't have any health constraints"
+- If the answers are vague or unclear, use the following guidelines:
+- You can state that "user provided an unclear answer, we will use a generic setting" 
+- Include the field in missing_fields array if information is not provided
 
 ONLY Return a JSON object with these fields, plus a "missing_fields" array listing any fields that are unclear or missing.
 Use a hybrid training lens—if a user mentions only running or only lifting, consider the other as potentially missing unless clearly ruled out.
