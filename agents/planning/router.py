@@ -32,8 +32,9 @@ async def generate_comprehensive_plan(request: ComprehensivePlanRequest):
         )
         
         profile_response = await planning_service.extract_profile(profile_request)
-        logger.info(f"Profile extracted with {len(profile_response.missing_fields)} missing fields")
-        
+        print(f"Profile extracted: {profile_response.profile_data}")
+
+        print(f"Missing fields: {profile_response.missing_fields}")
         # If profile is incomplete and follow-up questions are needed, return them
         if not profile_response.is_complete:
             return ComprehensivePlanResponse(

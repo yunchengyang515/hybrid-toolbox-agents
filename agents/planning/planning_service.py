@@ -1,11 +1,5 @@
-import json
 import logging
-import io
-import csv
-from typing import List, Dict, Any, Optional, Union, Tuple
 
-from common.llm import LLMClient
-from common.schemas import Message, Role, TrainingPlan
 from .schemas import (
     ProfileExtractRequest, 
     ProfileExtractResponse,
